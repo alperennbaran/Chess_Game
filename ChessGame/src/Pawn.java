@@ -4,10 +4,8 @@ public class Pawn extends Piece {
     private String type = "P";
     private final String path;
     private boolean moved = false;  //Eger hareket etmemis ise ilk hareketinde iki kare ilerleyebilme opsiyonu olmali
-    public boolean blackPawnDoublePush = false;
-    public boolean whitePawnDoublePush = false;
-    public int blackPush = 0;
-    public int whitePush = 0;
+    private boolean recentlyMoved = false;
+
 
     @Override
     public Icon getIcon() {
@@ -39,6 +37,13 @@ public class Pawn extends Piece {
         return this.type;
     }
 
+    public boolean isRecentlyMoved(){
+        return this.recentlyMoved;
+    }
+
+    public void setRecentlyMoved(boolean recentlyMoved) {
+        this.recentlyMoved = recentlyMoved;
+    }
 
     //  Piyonun secili kareye hareket edip edemeyecegini kontrol eden fonksiyon.
     @Override
@@ -46,40 +51,38 @@ public class Pawn extends Piece {
 
 
         //  Beyazsa bir kare ilerleme durumu:
-        if (start.getPiece().isWhite() && (destination.getY() - start.getY() == -1) && destination.getX() == start.getX()) {
-            whitePush++;
+        if (start.getPiece().isWhite() && (destination.getY() - start.getY() == -1) && destination.getX() == start.getX()){
             return destination.getPiece() == null;
 
             //  Siyahsa bir kare ilerleme durumu:
         } else if (!start.getPiece().isWhite() && (destination.getY() - start.getY() == 1) && start.getX() == destination.getX()) {
-            blackPush++;
             return destination.getPiece() == null;
 
             //  Beyaz icin carprazindaki tasi yeme durumu:
         } else if (start.getPiece().isWhite() && Math.abs(destination.getX() - start.getX()) == 1 && destination.getY() - start.getY() == -1) {
-            whitePush++;
-            return !destination.getPiece().isWhite();
+            if (destination.getPiece() == null ){
+                return false;
+            }else {
+                return !destination.getPiece().isWhite();
+            }
 
             //  Siyah icin carprazindaki tasi yeme durumu:
-        } else if (!start.getPiece().isWhite() && Math.abs(destination.getX() - start.getX()) == 1 && destination.getY() - start.getY() == 1) {
-            blackPush++;
-            return destination.getPiece().isWhite();
+        }else if (!start.getPiece().isWhite() && Math.abs(destination.getX() - start.getX()) == 1 && destination.getY() - start.getY() == 1){
+            if (destination.getPiece() == null){
+                return false;
+            }else {
+                return destination.getPiece().isWhite();
+            }
 
             //  Beyaz icin iki kare ilerleme durumu:
-        } else if (!hasMoved() && start.getPiece().isWhite() && destination.getY() - start.getY() == -2 && destination.getX() == start.getX()) {
-            whitePawnDoublePush = true;
+        }else if (!hasMoved() && start.getPiece().isWhite() && destination.getY() - start.getY() == -2 && destination.getX() == start.getX()){
             return board.getCell(start.getX(), start.getY() - 1).getPiece() == null && board.getCell(start.getX(), start.getY() - 2).getPiece() == null;
 
-
             //  Siyah icin iki kare ilerleme durumu:
-        } else if (!hasMoved() && !start.getPiece().isWhite() && destination.getY() - start.getY() == 2 && destination.getX() == start.getX()) {
-            blackPawnDoublePush = true;
+        }else if (!hasMoved() && !start.getPiece().isWhite() && destination.getY() - start.getY() == 2 && destination.getX() == start.getX()){
             return board.getCell(start.getX(), start.getY() + 1).getPiece() == null && board.getCell(start.getX(), start.getY() + 2).getPiece() == null;
 
-
         }
-
         return false;
     }
-
 }

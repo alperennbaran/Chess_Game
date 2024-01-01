@@ -176,6 +176,11 @@ public class FinalPanel extends javax.swing.JFrame {
         run();
     }
     public static void run() {
-        new FinalPanel().setVisible(true);
+
+        FinalPanel finalPanel = new FinalPanel();
+        finalPanel.setResizable(false);
+        finalPanel.setLocationRelativeTo(null);
+        finalPanel.setVisible(true);
+
     }
 }

@@ -159,6 +159,7 @@ public final class Gui{
                                     game.makeMove(move, game.getCurrentTurn());
 
 
+
                                     startCell = null;
                                     destinationCell = null;
                                     selectedPiece = null;

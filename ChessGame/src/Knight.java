@@ -23,7 +23,6 @@ public class Knight extends Piece {
         return path;
     }
 
-
     @Override
     public boolean canMove(Cell start, Cell destination, Board board) {
 

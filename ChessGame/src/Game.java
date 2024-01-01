@@ -8,21 +8,26 @@ public class Game {
     public int whiteMoveCounter = 1;
     public int winnerMoveCounter = 0;
 
-    public Player getCurrentTurn(){
+    public Player getCurrentTurn() {
         return this.currentTurn;
     }
-    public GameStatus getStatus(){
+
+    public GameStatus getStatus() {
         return this.status;
     }
-    public void setStatus(GameStatus status){
+
+    public void setStatus(GameStatus status) {
         this.status = status;
     }
-    public Player getWinner(){
+
+    public Player getWinner() {
         return this.winner;
     }
-    public void setWinner(Player player){
+
+    public void setWinner(Player player) {
         this.winner = winner;
     }
+
     public int getMoveNumber() {
         return winnerMoveCounter;
     }
@@ -30,62 +35,82 @@ public class Game {
     public void setMoveNumber(int moveNumber) {
         this.winnerMoveCounter = moveNumber;
     }
-    public void initialize(Player player1, Player player2){
+
+    public void initialize(Player player1, Player player2) {
         players[0] = player1;
         players[1] = player2;
 
         board.resetBoard();
 
-        if (player1.isWhiteSide()){
+        if (player1.isWhiteSide()) {
             this.currentTurn = player1;
-        }else{
+        } else {
             this.currentTurn = player2;
         }
         setStatus(GameStatus.ACTIVE);
     }
-    public Board getBoard(){
+
+    public Board getBoard() {
         return this.board;
     }
 
-    public boolean makeMove(Move move, Player player){
+    public boolean makeMove(Move move, Player player) {
         Piece selectedPiece = move.getStart().getPiece();
         Piece selectedRook;
-        Pawn  selectedPawn;
 
         //  Secili hucrede tas yoksa hamle yapilamaz.
-        if (selectedPiece == null){
+        if (selectedPiece == null) {
             System.out.println("Secilen hucrede tas yok");
             return false;
         }
 
         //  Sirasi gelen kisi mi hamle yapiyor?
-        if (player != currentTurn){
+        if (player != currentTurn) {
             System.out.println("Sirasi gelen kisi hamle yapmiyor");
             return false;
         }
 
+        //   RecentlyMoved false olması
+        if (currentTurn.isWhiteSide()) {
+            for (int x = 0; x <= 7; x++) {
+                if (board.getCell(x, 4).getPiece() instanceof Pawn && ((Pawn) board.getCell(x, 4).getPiece()).isRecentlyMoved()) {
+                    ((Pawn) board.getCell(x, 4).getPiece()).setRecentlyMoved(false);
+                }
+            }
+        } else {
+            for (int x = 0; x <= 7; x++) {
+                if (board.getCell(x, 3).getPiece() instanceof Pawn && ((Pawn) board.getCell(x, 3).getPiece()).isRecentlyMoved()) {
+                    ((Pawn) board.getCell(x, 3).getPiece()).setRecentlyMoved(false);
+                }
+            }
+        }
+
         //  Secili tas sirasi gelen kisinin tasi mi?
-        if (selectedPiece.isWhite() != currentTurn.isWhiteSide()){
+        if (selectedPiece.isWhite() != currentTurn.isWhiteSide()) {
             System.out.println("Sirasi gelen kisi kendi taslarini oynamiyor");
             return false;
         }
 
         //  Secili tas belirtilen hamleyi yapabilir mi?
-        if (!selectedPiece.canMove(move.getStart(), move.getDestination(), board)){
-            System.out.println("Secili tas istenilen konuma gidemez");
-            return false;
+        if (!move.isEnPassant(move.getStart(), move.getDestination(), board)) {
+            if (!selectedPiece.canMove(move.getStart(), move.getDestination(), board)) {
+                System.out.println("Secili tas istenilen konuma gidemez");
+
+                return false;
+            }
+
         }
 
         //  Tas alindi mi?
         Piece destinationPiece = move.getDestination().getPiece();
-        if (destinationPiece != null){
+        if (destinationPiece != null) {
 
             destinationPiece.setAlive(false);
             System.out.println("taş alındı");
         }
 
         //  Yapilan hamle sonucu hamle yapan kisinin Sah'i tehdit altinda kaliyor mu?
-        if (move.resultInThreat(move.getStart(), move.getDestination(), board, currentTurn)){
+        if (move.resultInThreat(move.getStart(), move.getDestination(), board, currentTurn)) {
             System.out.println("yapılan hamle sonucu şah tehdit altında kalıyor");
             return false;
         }
@@ -94,9 +119,9 @@ public class Game {
         //  Yapilan hamle Rok ise
         //  Beyaz icin:
         if (selectedPiece instanceof King &&
-                ((King) selectedPiece).isCastlingMove(move.getStart(), move.getDestination(), board)){
+                ((King) selectedPiece).isCastlingMove(move.getStart(), move.getDestination(), board)) {
 
-            if (move.getStart().getPiece().isWhite() && move.getDestination().getX() == 1){
+            if (move.getStart().getPiece().isWhite() && move.getDestination().getX() == 1) {
                 //  Sahin hareket etmesi
                 move.getDestination().setPiece(selectedPiece);
                 move.getStart().setPiece(null);
@@ -119,7 +144,6 @@ public class Game {
                 board.getCell(7, 7).setPiece(null);
                 board.getCell(4, 7).setPiece(selectedRook);
                 System.out.println("Beyaz uzun rok yaptı");
-
 
 
                 //  Siyah Tas icin
@@ -150,8 +174,19 @@ public class Game {
                 System.out.println("Siyah uzun rok yaptı");
 
             }
+            //  Gecerken alma
+        } else if (move.isEnPassant(move.getStart(), move.getDestination(), board)) {
 
-        }else {
+            move.getDestination().setPiece(selectedPiece);
+            move.getStart().setPiece(null);
+
+            if (selectedPiece.isWhite()) {
+                board.getCell(move.getDestination().getX(), move.getDestination().getY() + 1).setPiece(null);
+            } else {
+                board.getCell(move.getDestination().getX(), move.getDestination().getY() - 1).setPiece(null);
+            }
+
+        } else {
             //  Tasin hareket etmesi:
             if (selectedPiece.isWhite() && selectedPiece.canMove(move.getStart(), move.getDestination(), board)) {
                 move.getDestination().setPiece(selectedPiece);
@@ -169,20 +204,26 @@ public class Game {
         move.promote(move.getDestination());
 
         //  Eger Kale veya Sah hareket etmis ise Rok yapamamali.
-        if (selectedPiece instanceof Rook){
+        if (selectedPiece instanceof Rook) {
             ((Rook) selectedPiece).setCastlingDone(true);
         }
-        if (selectedPiece instanceof King){
+        if (selectedPiece instanceof King) {
             ((King) selectedPiece).setCastlingDone(true);
         }
 
 
-
         //  Secili tas piyon ise sonraki hamlelerde 2 kare ilerlememesi icin moved attribute'u true olur.
-        if (selectedPiece instanceof Pawn){
+        if (selectedPiece instanceof Pawn) {
             ((Pawn) selectedPiece).setMoved(true);
         }
-        if (move.blackKingsPosition(board).getPiece() instanceof King && ((King) move.blackKingsPosition(board).getPiece()).isCheckmate(board)){
+
+        //  İki kare ilerlemis ise recentlyMoved true olur.
+        if (selectedPiece instanceof Pawn && Math.abs(move.getDestination().getY() - move.getStart().getY()) == 2){
+            ((Pawn) selectedPiece).setRecentlyMoved(true);
+        }
+
+        //  Sah Mat olma durumu
+        if (move.blackKingsPosition(board).getPiece() instanceof King && ((King) move.blackKingsPosition(board).getPiece()).isCheckmate(board)) {
             this.setStatus(GameStatus.WHITE_WIN);
             winner = players[0];
             winnerMoveCounter = whiteMoveCounter;
@@ -193,13 +234,11 @@ public class Game {
             winnerMoveCounter = blackMoveCounter;
         }
 
-
-
         //  Siranin diger oyuncuya gecmesi:
-        if (this.currentTurn == players[0]){
+        if (this.currentTurn == players[0]) {
             this.currentTurn = players[1];
             whiteMoveCounter++;
-        }else {
+        } else {
             this.currentTurn = players[0];
             blackMoveCounter++;
         }

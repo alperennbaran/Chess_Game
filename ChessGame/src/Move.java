@@ -120,4 +120,59 @@ public class Move {
         }
         return blackKingsPosition;
     }
+    public boolean isEnPassant(Cell start, Cell destination, Board board){
+        //   Beyazsa
+        if (start.getPiece() != null && start.getPiece() instanceof Pawn && start.getPiece().isWhite()){
+            if (start.getX() <= 6 && start.getX() >= 1){
+
+                if ((board.getCell(start.getX() + 1, start.getY()).getPiece() instanceof Pawn
+                        && !board.getCell(start.getX() + 1, start.getY()).getPiece().isWhite() &&
+                        ((Pawn) board.getCell(start.getX() + 1, start.getY()).getPiece()).isRecentlyMoved() && destination.getPiece() == null ) ||
+                        (board.getCell(start.getX() - 1, start.getY()).getPiece() instanceof Pawn
+                                && !board.getCell(start.getX() - 1, start.getY()).getPiece().isWhite() &&
+                                ((Pawn) board.getCell(start.getX() - 1, start.getY()).getPiece()).isRecentlyMoved() && destination.getPiece() == null)) {
+                    return true;
+
+                }
+            }else if (start.getX() == 0){
+                if (board.getCell(start.getX() + 1, start.getY()).getPiece() instanceof Pawn
+                        && !board.getCell(start.getX() + 1, start.getY()).getPiece().isWhite() &&
+                        ((Pawn) board.getCell(start.getX() + 1, start.getY()).getPiece()).isRecentlyMoved() && destination.getPiece() == null){
+                    return true;
+                }
+            }else if (start.getX() == 7){
+                if (board.getCell(start.getX() - 1, start.getY()).getPiece() instanceof Pawn
+                        && !board.getCell(start.getX() - 1, start.getY()).getPiece().isWhite() &&
+                        ((Pawn) board.getCell(start.getX() - 1, start.getY()).getPiece()).isRecentlyMoved() && destination.getPiece() == null){
+                    return true;
+                }
+            }
+            //  Siyahsa
+        }else if (start.getPiece() != null && start.getPiece() instanceof Pawn && !start.getPiece().isWhite()){
+            if (start.getX() <= 6 && start.getX() >= 1){
+
+                if ((board.getCell(start.getX() + 1, start.getY()).getPiece() instanceof Pawn
+                        && board.getCell(start.getX() + 1, start.getY()).getPiece().isWhite() &&
+                        ((Pawn) board.getCell(start.getX() + 1, start.getY()).getPiece()).isRecentlyMoved() && destination.getPiece() == null ) ||
+                        (board.getCell(start.getX() - 1, start.getY()).getPiece() instanceof Pawn
+                                && board.getCell(start.getX() - 1, start.getY()).getPiece().isWhite() &&
+                                ((Pawn) board.getCell(start.getX() - 1, start.getY()).getPiece()).isRecentlyMoved() && destination.getPiece() == null)) {
+                    return true;
+                }
+            }else if (start.getX() == 0){
+                if (board.getCell(start.getX() + 1, start.getY()).getPiece() instanceof Pawn
+                        && board.getCell(start.getX() + 1, start.getY()).getPiece().isWhite() &&
+                        ((Pawn) board.getCell(start.getX() + 1, start.getY()).getPiece()).isRecentlyMoved() && destination.getPiece() == null){
+                    return true;
+                }
+            }else if (start.getX() == 7){
+                if (board.getCell(start.getX() - 1, start.getY()).getPiece() instanceof Pawn
+                        && board.getCell(start.getX() - 1, start.getY()).getPiece().isWhite() &&
+                        ((Pawn) board.getCell(start.getX() - 1, start.getY()).getPiece()).isRecentlyMoved() && destination.getPiece() == null){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }
