@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.nio.file.Paths;
 
 public class Bishop extends Piece {
     private final String type = "B";
@@ -6,8 +7,8 @@ public class Bishop extends Piece {
     public Bishop(boolean white) {
         super(white);
         if (isWhite()){
-            path="src/images/wb.png";
-        }else path="src/images/bb.png";
+            path = Paths.get("src", "images", "wb.png").toString();
+        }else path = Paths.get("src", "images", "bb.png").toString();
     }
     @Override
     public String getType(){

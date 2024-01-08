@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.nio.file.Paths;
 
 public class Pawn extends Piece {
     private String type = "P";
@@ -21,8 +22,8 @@ public class Pawn extends Piece {
     public Pawn(boolean white) {
         super(white);
         if (isWhite()) {
-            path = "src/images/wp.png";
-        } else path = "src/images/bp.png";
+            path = Paths.get("src", "images", "wp.png").toString();
+        }else path = Paths.get("src", "images", "bp.png").toString();
     }
 
     public boolean hasMoved() {

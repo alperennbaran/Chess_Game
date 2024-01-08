@@ -55,7 +55,7 @@ public class Move {
 
     Scanner scanner = new Scanner(System.in);
     public void promote(Cell destination){
-        if (movingPiece instanceof Pawn && (movingPiece.isWhite() && destination.getY() == 0) || (!movingPiece.isWhite() && destination.getY() == 7)){
+        if (movingPiece instanceof Pawn && ((movingPiece.isWhite() && destination.getY() == 0) || (!movingPiece.isWhite() && destination.getY() == 7))){
             boolean Loop = true;
             while (Loop){
                 System.out.print("\nPiyonu terfi ettirmek istediginiz tas turunu seciniz: ");

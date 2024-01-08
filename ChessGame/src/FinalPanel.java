@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.sql.*;
 import java.util.*;
 import javax.swing.*;
@@ -27,6 +28,7 @@ public class FinalPanel extends javax.swing.JFrame {
             dbHelper.showErrorMessage(exception);
         }
     }
+
 
     public ArrayList<DbPlayer> getPlayers() throws SQLException{
         Connection connection = null;
@@ -123,10 +125,10 @@ public class FinalPanel extends javax.swing.JFrame {
             }
 
         });
-            lblSearch.setText("Name : ");
+        lblSearch.setText("Search Key : ");
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());// getContentPane() metodu ile içerisindeki tüm bileşenleri alıyoruz. Bu bileşenlerin layoutunu değiştirmek için layout değişkenine atıyoruz.
         getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(          // layout değişkeninin horizontal eksendeki layoutunu değiştirmek için kullanıyoruz.
+        layout.setHorizontalGroup(         
                 layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                                 .addGap(96, 96, 96)
@@ -135,7 +137,7 @@ public class FinalPanel extends javax.swing.JFrame {
                                                 .addComponent(lblSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)) // Tablo uzunluğu (Dikey)
                                 .addContainerGap(79, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -146,13 +148,12 @@ public class FinalPanel extends javax.swing.JFrame {
                                         .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addComponent(lblSearch))
                                 .addGap(34, 34, 34)
-                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)) // Tablo uzunluğu (Dikey)
         );
 
         pack();
 
     }
-
     private void txtSearchKeyReleased(java.awt.event.KeyEvent evt) {// txtSearchKeyReleased() metodu ile arama kutusuna yazılan değer değiştiğinde çalışacak kodları yazıyoruz.
         String searchKey = txtSearch.getText();
         TableRowSorter<DefaultTableModel> tableRowSorter = new TableRowSorter<>(model);
@@ -164,12 +165,10 @@ public class FinalPanel extends javax.swing.JFrame {
             String name = entry.getStringValue(1); // name sütununun indeksini temsil etmelidir
             return name.toLowerCase().contains(searchKey.toLowerCase());
         }
-    };                     Ya bu yapılacak arama filtrelemesinde caseSensitive kaldırmak için ya da aşağıdaki
+    };                    Arama filtrelemesinde caseSensitive kaldırmak için ya bu yapılacak ya da aşağıdaki
     */
 
         tableRowSorter.setRowFilter(RowFilter.regexFilter(searchKey.toUpperCase().trim()));
-
-
     }
 
     public static void main(String[] args) {
@@ -181,6 +180,5 @@ public class FinalPanel extends javax.swing.JFrame {
         finalPanel.setResizable(false);
         finalPanel.setLocationRelativeTo(null);
         finalPanel.setVisible(true);
-
     }
 }

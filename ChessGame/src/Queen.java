@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.nio.file.Paths;
 
 public class Queen extends Piece {
     private String type = "Q";
@@ -15,8 +16,8 @@ public class Queen extends Piece {
     public Queen(boolean white) {
         super(white);
         if (isWhite()){
-            path="src/images/wq.png";
-        }else path="src/images/bq.png";
+            path = Paths.get("src", "images", "wq.png").toString();
+        }else path = Paths.get("src", "images", "bq.png").toString();
     }
 
     public String getType(){

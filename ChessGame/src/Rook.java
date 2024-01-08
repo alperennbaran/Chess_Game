@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.nio.file.Paths;
 
 public class Rook extends Piece {
     private String type = "R";
@@ -7,8 +8,8 @@ public class Rook extends Piece {
     public Rook(boolean white) {
         super(white);
         if (isWhite()){
-            path="src/images/wr.png";
-        }else path="src/images/br.png";
+            path = Paths.get("src", "images", "wr.png").toString();
+        }else path = Paths.get("src", "images", "br.png").toString();
     }
     @Override
     public Icon getIcon() {

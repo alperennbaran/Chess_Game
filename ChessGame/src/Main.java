@@ -5,12 +5,10 @@ public class Main {
     static Game game = new Game();
     static Player player0 = new Player(true);
     static Player player1 = new Player(false);
-    static LogInScreen logInScreen = new LogInScreen();
     static DbHelper dbHelper = new DbHelper();
 
     public static void main(String[] args) {
-        logInScreen.main();
-
+        LogInScreen logInScreen = new LogInScreen();
         }
     public static void startGame() {
         game.initialize(player0, player1);
@@ -71,3 +69,5 @@ public class Main {
         }
     }
 }
+
+
